@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Choisir vos 5 derniers billets – Version avancée</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            background-color: #f8f9fa;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            font-family: monospace;
+        }
+        .topic {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 6px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .topic p {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        .rating label {
+            margin-right: 0.5rem;
+        }
+        button {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #e9ecef;
+            border-radius: 6px;
+        }
+        #message {
+            color: #b94a48;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Choisissez vos 5 derniers billets de blog (version avancée)</h1>
+<p>Vous pouvez personnaliser la liste de sujets en saisissant un sujet par ligne dans la zone de texte ci‑dessous. L'application prendra en charge entre 20 et 42 sujets. Après avoir généré le formulaire, notez chaque sujet sur 1 à 5 selon votre motivation.</p>
+
+<textarea id="customTopics" placeholder="Entrez chaque sujet sur une ligne. Par exemple :\nBilan de mes années dans l'administration associative\nComment lancer un blog rentable avec peu de moyens\n..."></textarea>
+<button type="button" onclick="generateForm()">Générer le formulaire</button>
+<div id="message"></div>
+
+<form id="topicsForm"></form>
+
+<button type="button" onclick="calculateTopFive()" id="calcButton" style="display:none">Voir mes 5 sujets !</button>
+
+<div id="result"></div>
+
+<script>
+var topics = [];
+function generateForm() {
+    var text = document.getElementById('customTopics').value.trim();
+    var lines = text.split(/\n+/).map(function(line) { return line.trim(); }).filter(function(line) { return line.length > 0; });
+    var messageDiv = document.getElementById('message');
+    var form = document.getElementById('topicsForm');
+    form.innerHTML = '';
+    document.getElementById('result').innerHTML = '';
+    // Validation du nombre de sujets
+    if (lines.length < 20 || lines.length > 42) {
+        messageDiv.textContent = 'Veuillez entrer entre 20 et 42 sujets (actuellement ' + lines.length + ').';
+        document.getElementById('calcButton').style.display = 'none';
+        return;
+    }
+    messageDiv.textContent = '';
+    topics = lines;
+    topics.forEach(function(topic, index) {
+        var div = document.createElement('div');
+        div.className = 'topic';
+        var p = document.createElement('p');
+        p.textContent = (index + 1) + '. ' + topic;
+        div.appendChild(p);
+        var ratingDiv = document.createElement('div');
+        ratingDiv.className = 'rating';
+        for (var i = 1; i <= 5; i++) {
+            var label = document.createElement('label');
+            var radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'topic_' + index;
+            radio.value = i;
+            if (i === 3) {
+                radio.checked = true;
+            }
+            label.appendChild(radio);
+            label.appendChild(document.createTextNode(' ' + i));
+            ratingDiv.appendChild(label);
+        }
+        div.appendChild(ratingDiv);
+        form.appendChild(div);
+    });
+    // Afficher le bouton de calcul
+    document.getElementById('calcButton').style.display = 'block';
+}
+
+function calculateTopFive() {
+    var scores = [];
+    topics.forEach(function(topic, index) {
+        var radios = document.getElementsByName('topic_' + index);
+        var selectedValue = 3;
+        for (var j = 0; j < radios.length; j++) {
+            if (radios[j].checked) {
+                selectedValue = parseInt(radios[j].value);
+                break;
+            }
+        }
+        scores.push({ topic: topic, score: selectedValue });
+    });
+    scores.sort(function(a, b) { return b.score - a.score; });
+    var topFive = scores.slice(0, 5);
+    var resultDiv = document.getElementById('result');
+    var html = '<h2>Vos 5 sujets recommandés</h2><ol>';
+    topFive.forEach(function(item) {
+        html += '<li>' + item.topic + ' (score : ' + item.score + ')</li>';
+    });
+    html += '</ol>';
+    resultDiv.innerHTML = html;
+}
+</script>
+
+</body>
+</html>
