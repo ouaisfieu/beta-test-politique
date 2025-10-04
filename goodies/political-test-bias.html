@@ -670,11 +670,170 @@
                         </div>
                     </div>
 
-                    <button class="restart-btn" onclick="restart()">🔄 Recommencer la démonstration</button>
+                    <button class="restart-btn" onclick="showGallery()">🎨 Voir la galerie des profils</button>
+                    <button class="restart-btn" style="background: #95a5a6; margin-left: 10px;" onclick="restart()">🔄 Recommencer</button>
                 </div>
             `;
 
             document.querySelector('.content').innerHTML = html;
+        }
+
+        function showGallery() {
+            const profiles = [
+                {
+                    emoji: "🌺⚔️",
+                    name: "Fasciste Hippie Pacifiste",
+                    color: "#e74c3c",
+                    description: "Vous prônez la paix universelle par l'élimination autoritaire de tous les opposants à la paix. Votre slogan : 'Make Love Not War, ou je vous écrase !'",
+                    traits: [
+                        "Port obligatoire de fleurs dans les cheveux",
+                        "Méditation forcée à 6h du matin", 
+                        "Camps de rééducation à l'amour universel",
+                        "Dictature de la bienveillance"
+                    ]
+                },
+                {
+                    emoji: "💰🚩",
+                    name: "Anarcho-Capitaliste de Gauche Modérée",
+                    color: "#f39c12",
+                    description: "Vous voulez abolir l'État tout en instaurant un service public universel géré par des multinationales solidaires. Confus ? C'est normal !",
+                    traits: [
+                        "Privatisation des moyens de production collectifs",
+                        "Impôts volontaires à 90%",
+                        "Uber mais c'est une coopérative",
+                        "La main invisible du marché fait du tricot solidaire"
+                    ]
+                },
+                {
+                    emoji: "👑🌱",
+                    name: "Royaliste Progressiste Écologique",
+                    color: "#27ae60",
+                    description: "Vous militez pour le retour de la monarchie absolue mais uniquement si le roi est végan, non-binaire et élu au suffrage universel tous les 5 ans.",
+                    traits: [
+                        "Château royal en matériaux recyclables",
+                        "Couronne en chanvre bio",
+                        "Guillotine alimentée à l'énergie solaire",
+                        "Noblesse héréditaire mais inclusive"
+                    ]
+                },
+                {
+                    emoji: "🏭❤️",
+                    name: "Communiste Libéral Pro-Business",
+                    color: "#3498db",
+                    description: "Vous rêvez d'une dictature du prolétariat dirigée par les PDG du CAC 40. Marx rencontre Bezos dans un univers parallèle.",
+                    traits: [
+                        "Révolution sponsorisée par Amazon",
+                        "Goulag avec option télétravail",
+                        "Plus-value redistribuée en stock-options",
+                        "L'Internationale chantée en réunion Zoom"
+                    ]
+                },
+                {
+                    emoji: "🎯💫",
+                    name: "Centriste Radical Extrémiste",
+                    color: "#9b59b6",
+                    description: "Vous êtes violemment modéré et agressivement nuancé. Votre position : exactement au milieu de tout, SANS AUCUN COMPROMIS !",
+                    traits: [
+                        "Manifestations pour le statu quo",
+                        "Révolution pour ne rien changer",
+                        "Extrêmement tiède avec passion",
+                        "Ni de gauche, ni de droite, mais les deux en même temps"
+                    ]
+                },
+                {
+                    emoji: "🏴‍☠️📊",
+                    name: "Anarchiste Bureaucrate Méthodique",
+                    color: "#34495e",
+                    description: "Vous voulez détruire toute forme d'autorité, mais uniquement après avoir rempli les formulaires A38 et B52 en trois exemplaires.",
+                    traits: [
+                        "Chaos organisé selon la norme ISO 9001",
+                        "Molotov avec étiquette de sécurité",
+                        "Destruction de l'État selon un planning Excel",
+                        "Ni dieu, ni maître, mais un chef de projet quand même"
+                    ]
+                },
+                {
+                    emoji: "🦄🔫",
+                    name: "Utopiste Militariste Pragmatique",
+                    color: "#e67e22",
+                    description: "Vous croyez en un monde parfait qu'on peut atteindre uniquement par la force brutale et le réalisme cynique. L'idéal par les armes !",
+                    traits: [
+                        "Bisounours armés jusqu'aux dents",
+                        "Arc-en-ciel produit par des missiles",
+                        "Paix mondiale par guerre préventive",
+                        "Lendemains qui chantent (des chants militaires)"
+                    ]
+                },
+                {
+                    emoji: "🎪📱",
+                    name: "Techno-Féodaliste Nostalgique",
+                    color: "#16a085",
+                    description: "Vous voulez revenir au Moyen Âge mais avec la 5G et les cryptomonnaies. Seigneur 2.0 avec serfs en télétravail.",
+                    traits: [
+                        "Château fort avec fibre optique",
+                        "Droit de cuissage par Tinder",
+                        "Impôt en Bitcoin sur les récoltes",
+                        "Croisades organisées sur Discord"
+                    ]
+                }
+            ];
+
+            const galleryHtml = `
+                <div class="final-result">
+                    <div class="result-title">🎨 La Galerie des Profils Politiques Impossibles</div>
+                    <p style="color: #7f8c8d; margin: 20px 0; font-size: 1.1em;">
+                        Découvrez tous les profils absurdes que ce test peut générer !<br>
+                        <em>Rappel : Ces profils sont volontairement contradictoires pour illustrer l'absurdité des catégorisations simplistes.</em>
+                    </p>
+                    
+                    <div class="profiles-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin: 30px 0;">
+                        ${profiles.map(profile => `
+                            <div class="profile-card" style="background: white; border-radius: 15px; padding: 25px; border: 3px solid ${profile.color}; transition: transform 0.3s ease; cursor: pointer;" 
+                                 onmouseover="this.style.transform='scale(1.02)'" 
+                                 onmouseout="this.style.transform='scale(1)'">
+                                <div style="text-align: center; margin-bottom: 15px;">
+                                    <span style="font-size: 3em;">${profile.emoji}</span>
+                                </div>
+                                <h3 style="color: ${profile.color}; text-align: center; margin-bottom: 15px; font-size: 1.3em;">
+                                    ${profile.name}
+                                </h3>
+                                <p style="color: #2c3e50; line-height: 1.6; margin-bottom: 15px; font-style: italic;">
+                                    "${profile.description}"
+                                </p>
+                                <div style="background: #f8f9fa; padding: 15px; border-radius: 10px;">
+                                    <strong style="color: ${profile.color};">Caractéristiques :</strong>
+                                    <ul style="margin: 10px 0; padding-left: 20px; color: #555;">
+                                        ${profile.traits.map(trait => `<li style="margin: 5px 0;">${trait}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div style="background: #fff3cd; padding: 20px; border-radius: 10px; margin: 30px 0; border: 2px solid #ffc107;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">💡 Le Message Pédagogique</h4>
+                        <p style="color: #856404; line-height: 1.6;">
+                            Ces profils absurdes illustrent pourquoi il est impossible de réduire les opinions politiques complexes à des étiquettes simplistes. 
+                            La réalité politique est nuancée, multidimensionnelle et ne peut pas être capturée par un quiz de 8 questions sur internet !
+                        </p>
+                        <p style="color: #856404; line-height: 1.6; margin-top: 10px;">
+                            <strong>Méfiez-vous</strong> des tests qui prétendent vous "révéler" votre identité politique. 
+                            Ils sont souvent conçus pour confirmer vos biais, vous polariser ou collecter vos données.
+                        </p>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <button class="restart-btn" onclick="restart()">🔄 Refaire le test</button>
+                        <button class="restart-btn" style="background: #8e44ad; margin-left: 10px;" onclick="shareGallery()">📤 Partager pour sensibiliser</button>
+                    </div>
+                </div>
+            `;
+
+            document.querySelector('.content').innerHTML = galleryHtml;
+        }
+
+        function shareGallery() {
+            alert("🎭 Merci de sensibiliser votre entourage !\n\nPartagez ce test pédagogique pour aider les gens à reconnaître les manipulations dans les tests politiques viraux.\n\n#EspritCritique #Manipulation #TestPolitique");
         }
 
         function restart() {
@@ -690,6 +849,10 @@
                 <div id="questionContainer"></div>
             `;
             showQuestion();
+        }
+
+        function shareGallery() {
+            alert("🎭 Merci de sensibiliser votre entourage !\n\nPartagez ce test pédagogique pour aider les gens à reconnaître les manipulations dans les tests politiques viraux.\n\n#EspritCritique #Manipulation #TestPolitique");
         }
 
         // Démarrer le test
