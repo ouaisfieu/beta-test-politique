@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Êtes‑vous trotskyste ? – Exploration des principes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #030A18;
+    }
+    header {
+      background-color: #97B1DF;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    #container {
+      max-width: 650px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      margin-top: 0;
+    }
+    .question {
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin-bottom: 0.5rem;
+      padding: 0.8rem;
+      border: 1px solid #97B1DF;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .options button:hover {
+      background: #e7ecf5;
+    }
+    .options button.selected {
+      background: #97B1DF;
+      color: white;
+    }
+    #next {
+      padding: 0.8rem 1.5rem;
+      background: #030A18;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    #next[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    #results {
+      display: none;
+    }
+    canvas {
+      max-width: 100%;
+      margin-bottom: 1rem;
+    }
+    #citations {
+      font-size: 0.8rem;
+      color: #555;
+    }
+    #citations a {
+      color: #0066CC;
+      text-decoration: none;
+    }
+    #citations a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 650px) {
+      #container {
+        margin: 1rem;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Êtes‑vous trotskyste ?</h1>
+    <p>Un questionnaire pour explorer vos affinités avec les idées de Trotsky</p>
+  </header>
+  <div id="container">
+    <div id="quiz">
+      <div id="q-text" class="question"></div>
+      <div id="q-options" class="options"></div>
+      <button id="next" disabled>Suivant</button>
+    </div>
+    <div id="results">
+      <h2>Vos résultats</h2>
+      <canvas id="chart"></canvas>
+      <p>
+        Ce graphique montre votre degré d’accord avec plusieurs principes associés au trotskysme.
+        Il ne s’agit pas d’une étiquette politique : l’objectif est de réfléchir à la façon dont vos valeurs se situent par rapport à ces idées. Le trotskysme se caractérise notamment par l’internationalisme révolutionnaire et la primauté de la démocratie ouvrière【346564028382229†L197-L205】【346564028382229†L222-L230】.
+      </p>
+      <div id="citations">
+        Sources : 
+        <span>[1] <a href="【346564028382229†L197-L205】" target="_blank">Britannica – théorie de la révolution permanente</a></span>,
+        <span>[2] <a href="【346564028382229†L216-L220】" target="_blank">Britannica – Socialisme dans un seul pays</a></span>,
+        <span>[3] <a href="【346564028382229†L222-L230】" target="_blank">Britannica – démocratie ouvrière et opposition à la bureaucratie</a></span>,
+        <span>[4] <a href="【346564028382229†L240-L244】" target="_blank">Britannica – front uni contre le fascisme</a></span>.
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Définition des questions et des dimensions liées aux principes du trotskysme
+    const quizQuestions = [
+      {
+        text: "La révolution socialiste doit être permanente et internationale.",
+        dimension: "internationalisme"
+      },
+      {
+        text: "Il est possible de construire le socialisme dans un seul pays.",
+        dimension: "internationalisme",
+        invert: true // désaccord indique affinité
+      },
+      {
+        text: "La classe ouvrière doit diriger la révolution en raison de sa position stratégique dans l’industrie.",
+        dimension: "démocratie_ouvrière"
+      },
+      {
+        text: "Les bureaucraties au pouvoir doivent être remplacées par une démocratie ouvrière.",
+        dimension: "démocratie_ouvrière"
+      },
+      {
+        text: "La lutte contre le fascisme requiert une alliance unie des travailleurs.",
+        dimension: "unité_antifasciste"
+      }
+    ];
+    // Options et valeurs d’accord/désaccord
+    const labels = [
+      "Pas du tout d'accord",
+      "Pas d'accord",
+      "Neutre",
+      "D'accord",
+      "Tout à fait d'accord"
+    ];
+    const values = [-2, -1, 0, 1, 2];
+
+    let current = 0;
+    const answers = [];
+    const qText = document.getElementById('q-text');
+    const qOptions = document.getElementById('q-options');
+    const nextBtn = document.getElementById('next');
+    function render() {
+      nextBtn.disabled = true;
+      const q = quizQuestions[current];
+      qText.textContent = q.text;
+      qOptions.innerHTML = '';
+      labels.forEach((lbl, idx) => {
+        const btn = document.createElement('button');
+        btn.textContent = lbl;
+        btn.addEventListener('click', () => {
+          // Remove selection from other options
+          Array.from(qOptions.children).forEach(el => el.classList.remove('selected'));
+          btn.classList.add('selected');
+          let val = values[idx];
+          if (q.invert) val = -val;
+          answers[current] = { value: val, dimension: q.dimension };
+          nextBtn.disabled = false;
+        });
+        qOptions.appendChild(btn);
+      });
+    }
+    nextBtn.addEventListener('click', () => {
+      current++;
+      if (current < quizQuestions.length) {
+        render();
+      } else {
+        showChart();
+      }
+    });
+    function showChart() {
+      document.getElementById('quiz').style.display = 'none';
+      document.getElementById('results').style.display = 'block';
+      // Agrégation des scores par dimension
+      const totals = {};
+      const counts = {};
+      answers.forEach(a => {
+        totals[a.dimension] = (totals[a.dimension] || 0) + a.value;
+        counts[a.dimension] = (counts[a.dimension] || 0) + 1;
+      });
+      const dims = Object.keys(totals);
+      const averages = dims.map(d => totals[d] / counts[d]);
+      const ctx = document.getElementById('chart').getContext('2d');
+      new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: dims.map(d => d.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())),
+          datasets: [{
+            label: 'Accord',
+            data: averages,
+            backgroundColor: 'rgba(151, 177, 223, 0.2)',
+            borderColor: 'rgba(151, 177, 223, 1)',
+            pointBackgroundColor: 'rgba(151, 177, 223, 1)'
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            r: {
+              suggestedMin: -2,
+              suggestedMax: 2,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+    // Initialisation
+    render();
+  </script>
+</body>
+</html>

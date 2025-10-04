@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Test Politique Ultime™</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header.biased {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .logo {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .question {
+            font-size: 1.3em;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .image-manipulative {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            display: block;
+            border-radius: 10px;
+        }
+
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .answer-btn {
+            padding: 15px 25px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .answer-btn:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .answer-btn.extreme {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+
+        .answer-btn.very-extreme {
+            background: #f8d7da;
+            border-color: #dc3545;
+            font-weight: bold;
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .popup-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .popup-icon {
+            font-size: 2em;
+            margin-right: 15px;
+        }
+
+        .popup-title {
+            font-size: 1.4em;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .popup-content {
+            line-height: 1.6;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+
+        .technique-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .technique-name {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 5px;
+        }
+
+        .popup-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .popup-btn:hover {
+            background: #2980b9;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            transition: width 0.5s ease;
+            border-radius: 3px;
+        }
+
+        .final-result {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .result-title {
+            font-size: 2em;
+            color: #e74c3c;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 20px 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            font-size: 1.5em;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .techniques-summary {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .techniques-title {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .technique-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .technique-number {
+            background: #e74c3c;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .restart-btn {
+            background: #2ecc71;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn:hover {
+            background: #27ae60;
+            transform: scale(1.05);
+        }
+
+        .warning-banner {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .warning-banner.show {
+            display: block;
+        }
+
+        .resources {
+            background: #e8f4f8;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .resources h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .resource-link {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .resource-link:hover {
+            background: #3498db;
+            color: white;
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header" id="header">
+            <div class="logo">🏛️ Le Test Politique Ultime™</div>
+            <div class="subtitle" id="subtitle">Découvrez votre vraie orientation politique en 8 questions</div>
+        </div>
+        
+        <div class="content">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress" style="width: 0%"></div>
+            </div>
+            
+            <div id="questionContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                number: 1,
+                text: "Quelle devrait être la priorité d'un gouvernement ?",
+                image: null,
+                answers: [
+                    { text: "Assurer la sécurité et le bien-être de ses citoyens", value: "neutre" },
+                    { text: "Garantir les libertés individuelles", value: "neutre" },
+                    { text: "Promouvoir l'égalité sociale", value: "neutre" },
+                    { text: "Stimuler l'économie", value: "neutre" }
+                ],
+                bias: {
+                    title: "Question d'apparence neutre",
+                    technique: "Question d'amorçage",
+                    explanation: "Cette première question semble parfaitement légitime et équilibrée. C'est volontaire ! Les tests biaisés commencent souvent par des questions neutres pour établir une crédibilité et mettre en confiance."
+                }
+            },
+            {
+                number: 2,
+                text: "Comment devrait-on financer les services publics ?",
+                image: null,
+                answers: [
+                    { text: "Par une fiscalité progressive", value: "gauche" },
+                    { text: "Par une fiscalité équilibrée", value: "centre" },
+                    { text: "Par des partenariats public-privé", value: "droite" },
+                    { text: "Par une réduction des dépenses", value: "droite" }
+                ],
+                bias: {
+                    title: "Toujours en apparence neutre...",
+                    technique: "Établissement de confiance",
+                    explanation: "Deuxième question raisonnable. Le test construit sa légitimité. Mais regardez bien : nous commençons déjà à catégoriser vos réponses selon un axe gauche-droite simpliste."
+                }
+            },
+            {
+                number: 3,
+                text: "Les riches entrepreneurs qui créent des emplois méritent-ils des avantages fiscaux pour continuer à faire prospérer notre économie ?",
+                image: null,
+                answers: [
+                    { text: "Absolument, ils sont le moteur de notre prospérité", value: "droite", class: "extreme" },
+                    { text: "Oui, c'est nécessaire pour la croissance", value: "droite" },
+                    { text: "Peut-être dans certains cas", value: "centre" },
+                    { text: "Non, tout le monde devrait payer sa juste part", value: "gauche" }
+                ],
+                bias: {
+                    title: "⚠️ Première manipulation détectée !",
+                    technique: "Question orientée avec présupposé",
+                    explanation: "Avez-vous remarqué ? La question présuppose que les riches 'font prospérer notre économie' et 'créent des emplois'. Elle utilise aussi le mot 'méritent' qui suggère déjà la réponse. Une question neutre serait : 'Quelle devrait être la politique fiscale pour les hauts revenus ?'"
+                }
+            },
+            {
+                number: 4,
+                text: "Face à la montée inquiétante de la criminalité qui menace nos familles, que faut-il faire ?",
+                image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1MCIgdmlld0JveD0iMCAwIDQwMCAyNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyNTAiIGZpbGw9IiMyYzNlNTAiLz4KICA8cG9seWdvbiBwb2ludHM9IjUwLDIwMCA1MCwxMDAgMTAwLDEyMCAxNTAsODAgMjAwLDYwIDI1MCw0MCAzMDAsNTAgMzUwLDMwIDM1MCwyMDAiIGZpbGw9IiNlNzRjM2MiIG9wYWNpdHk9IjAuOCIvPgogIDx0ZXh0IHg9IjIwMCIgeT0iMzAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNlNzRjM2MiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNyaW1pbmFsaXTDqSBlbiBIYXVzc2UgISEhPC90ZXh0PgogIDx0ZXh0IHg9IjIwMCIgeT0iMjMwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiNlY2YwZjEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPirTdGF0aXN0aXF1ZXMgbm9uIHbDqXJpZmnDqWVzPC90ZXh0Pgo8L3N2Zz4=",
+                answers: [
+                    { text: "Renforcer drastiquement les peines et construire plus de prisons", value: "extreme-droite", class: "very-extreme" },
+                    { text: "Augmenter les effectifs de police", value: "droite", class: "extreme" },
+                    { text: "Investir dans la prévention sociale", value: "gauche" },
+                    { text: "Les deux : répression ET prévention", value: "piege" }
+                ],
+                bias: {
+                    title: "🚨 Manipulation émotionnelle !",
+                    technique: "Appel à la peur + Fausse dichotomie + Graphique trompeur",
+                    explanation: "Triple manipulation ! 1) L'image effrayante sans source. 2) 'Montée inquiétante' et 'menace nos familles' pour créer de la peur. 3) Le graphique est faux et dramatise. 4) Fausse opposition entre sécurité et prévention. En réalité, la criminalité baisse dans la plupart des pays occidentaux depuis 20 ans !"
+                }
+            },
+            {
+                number: 5,
+                text: "Les assistés qui profitent du système et vivent de nos impôts sans travailler devraient-ils continuer à recevoir des aides ?",
+                image: null,
+                answers: [
+                    { text: "NON ! Il faut couper toutes les aides aux parasites !", value: "extreme-droite", class: "very-extreme" },
+                    { text: "Les aides doivent être conditionnées au travail", value: "droite", class: "extreme" }
+                ],
+                bias: {
+                    title: "😱 Manipulation grossière !",
+                    technique: "Vocabulaire chargé + Options manquantes",
+                    explanation: "C'est de pire en pire ! 'Assistés', 'profitent', 'parasites' : vocabulaire ultra-péjoratif. Où est l'option pour dire que la plupart des bénéficiaires d'aides sociales travaillent ou cherchent activement un emploi ? Seulement 2 options orientées !"
+                }
+            },
+            {
+                number: 6,
+                text: "Êtes-vous plutôt du genre à :",
+                image: null,
+                answers: [
+                    { text: "Aimer votre pays, respecter les traditions et protéger votre famille comme tout patriote normal", value: "extreme-droite", class: "very-extreme" },
+                    { text: "Détruire les valeurs occidentales en imposant le wokisme LGBT+ et l'immigration massive", value: "extreme-gauche", class: "very-extreme" }
+                ],
+                bias: {
+                    title: "🤯 Caricature totale !",
+                    technique: "Faux dilemme absurde + Amalgames",
+                    explanation: "C'est maintenant une parodie ! Seulement 2 options caricaturales. Amalgames grotesques (patriotisme = extrême-droite, progressisme = destruction). Aucune nuance possible. C'est exactement ce que font certains tests viraux sur les réseaux sociaux !"
+                }
+            },
+            {
+                number: 7,
+                text: "Si vous étiez un animal politique, seriez-vous :",
+                image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1MCIgdmlld0JveD0iMCAwIDQwMCAyNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyNTAiIGZpbGw9IiNmZmU0YjUiLz4KICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMjUiIHI9IjUwIiBmaWxsPSIjOGI0NTEzIi8+CiAgPGNpcmNsZSBjeD0iODAiIGN5PSIxMTAiIHI9IjgiIGZpbGw9ImJsYWNrIi8+CiAgPGNpcmNsZSBjeD0iMTIwIiBjeT0iMTEwIiByPSI4IiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0gODAgMTQwIFEgMTAwIDE1MCAxMjAgMTQwIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjMiIGZpbGw9Im5vbmUiLz4KICA8dGV4dCB4PSIxMDAiIHk9IjIwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Mb3V0cmUgbWlnbm9ubmU8L3RleHQ+CiAgCiAgPHJlY3QgeD0iMjUwIiB5PSI3NSIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9ImdyYXkiLz4KICA8Y2lyY2xlIGN4PSIyNzAiIGN5PSIxMTAiIHI9IjgiIGZpbGw9InJlZCIvPgogIDxjaXJjbGUgY3g9IjMzMCIgY3k9IjExMCIgcj0iOCIgZmlsbD0icmVkIi8+CiAgPHBhdGggZD0iTSAyODAgMTUwIEwgMzAwIDEzMCAzMjAgMTUwIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiLz4KICA8dGV4dCB4PSIzMDAiIHk9IjIwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Mb3VwIG3DqWNoYW50PC90ZXh0Pgo8L3N2Zz4=",
+                answers: [
+                    { text: "🦊 Un renard rusé qui manipule les médias gauchistes", value: "complot", class: "very-extreme" },
+                    { text: "🦅 Un aigle fier qui survole les problèmes des petites gens", value: "elite", class: "very-extreme" },
+                    { text: "🐑 Un mouton qui suit bêtement le troupeau", value: "mouton", class: "extreme" },
+                    { text: "🦄 Une licorne parce que mes idées n'existent pas dans le monde réel", value: "utopiste", class: "extreme" }
+                ],
+                bias: {
+                    title: "🎪 Cirque complet !",
+                    technique: "Infantilisation + Stéréotypes + Images manipulatrices",
+                    explanation: "Le test devient complètement absurde ! Métaphores animales ridicules, chaque option est une insulte déguisée. Les images suggèrent gentil vs méchant. C'est de la manipulation pure par l'infantilisation et l'émotion."
+                }
+            },
+            {
+                number: 8,
+                text: "Pour finir, diriez-vous que les gens qui ne pensent pas comme vous sont :",
+                image: null,
+                answers: [
+                    { text: "Des ennemis de la nation qu'il faut combattre", value: "fasciste", class: "very-extreme" },
+                    { text: "Des idiots utiles manipulés par le système", value: "complotiste", class: "very-extreme" },
+                    { text: "Des gens avec qui on ne peut pas discuter", value: "sectaire", class: "extreme" },
+                    { text: "Probablement des bots russes ou chinois", value: "paranoiaque", class: "extreme" }
+                ],
+                bias: {
+                    title: "💥 Manipulation finale !",
+                    technique: "Polarisation extrême + Absence d'option modérée",
+                    explanation: "Le clou du spectacle ! Aucune option raisonnable comme 'Des gens avec des opinions différentes mais légitimes'. Le test force la polarisation et la diabolisation de l'autre. C'est exactement comme ça que les tests viraux divisent et radicalisent !"
+                }
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = [];
+        let biasRevealed = [];
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+
+            // Rendre l'interface de plus en plus "biaisée" visuellement
+            if (currentQuestion >= 4) {
+                document.getElementById('header').classList.add('biased');
+                document.getElementById('subtitle').textContent = "Le test qui révèle QUI VOUS ÊTES VRAIMENT !!! 🔥";
+            }
+
+            let html = `
+                <div class="question-container">
+                    <div class="question-number">Question ${q.number}/8</div>
+                    <div class="question">${q.text}</div>
+            `;
+
+            if (q.image) {
+                html += `<img src="${q.image}" class="image-manipulative" alt="Graphique manipulateur">`;
+            }
+
+            html += '<div class="answers">';
+            q.answers.forEach((answer, index) => {
+                const btnClass = answer.class || '';
+                html += `
+                    <button class="answer-btn ${btnClass}" onclick="selectAnswer(${index})">
+                        ${answer.text}
+                    </button>
+                `;
+            });
+            html += '</div></div>';
+
+            document.getElementById('questionContainer').innerHTML = html;
+        }
+
+        function selectAnswer(answerIndex) {
+            const q = questions[currentQuestion];
+            answers.push(q.answers[answerIndex].value);
+
+            // Afficher le popup explicatif
+            showBiasPopup(q.bias);
+        }
+
+        function showBiasPopup(bias) {
+            biasRevealed.push(bias.technique);
+            
+            const popup = document.createElement('div');
+            popup.innerHTML = `
+                <div class="overlay" onclick="nextQuestion()"></div>
+                <div class="popup">
+                    <div class="popup-header">
+                        <div class="popup-icon">💡</div>
+                        <div class="popup-title">${bias.title}</div>
+                    </div>
+                    <div class="popup-content">
+                        <div class="technique-box">
+                            <div class="technique-name">${bias.technique}</div>
+                            <div>${bias.explanation}</div>
+                        </div>
+                    </div>
+                    <button class="popup-btn" onclick="nextQuestion()">
+                        ${currentQuestion < questions.length - 1 ? 'Question suivante →' : 'Voir le résultat final 🎯'}
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+        }
+
+        function nextQuestion() {
+            // Supprimer le popup
+            const popup = document.querySelector('.overlay');
+            if (popup && popup.parentElement) {
+                popup.parentElement.remove();
+            }
+
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            const absurdResults = [
+                "Anarcho-Capitaliste de Gauche Modérée",
+                "Royaliste Progressiste Écologique",
+                "Communiste Libéral Pro-Business",
+                "Fasciste Hippie Pacifiste",
+                "Centriste Radical Extrémiste"
+            ];
+
+            const randomResult = absurdResults[Math.floor(Math.random() * absurdResults.length)];
+
+            const html = `
+                <div class="final-result">
+                    <div class="result-title">🎭 Félicitations ! Votre profil politique est :</div>
+                    <div class="result-badge">${randomResult}</div>
+                    
+                    <div class="techniques-summary">
+                        <div class="techniques-title">📚 Les 8 techniques de manipulation utilisées dans ce test :</div>
+                        
+                        <div class="technique-item">
+                            <div class="technique-number">1</div>
+                            <div>
+                                <strong>Questions d'amorçage :</strong> Commencer par des questions neutres pour établir la crédibilité avant d'introduire les biais.
+                            </div>
+                        </div>
+                        
+                        <div class="technique-item">
+                            <div class="technique-number">2</div>
+                            <div>
+                                <strong>Présupposés cachés :</strong> Intégrer des affirmations non prouvées dans les questions (ex: "les riches créent des emplois").
+                            </div>
+                        </div>
+                        
+                        <div class="technique-item">
+                            <div class="technique-number">3</div>
+                            <div>
+                                <strong>Vocabulaire chargé :</strong> Utiliser des mots émotionnels ("assistés", "parasites", "menace") pour orienter les réponses.
+                            </div>
+                        </div>
+                        
+                        <div class="technique-item">
+                            <div class="technique-number">4</div>
+                            <div>
+                                <strong>Faux dilemmes :</strong> Ne proposer que des options extrêmes sans nuance ni position modérée.
+                            </div>
+                        </div>
+                        
+                        <div class="technique-item">
+                            <div class="technique-number">5</div>
+                            <div>
+                                <strong>Appel à la peur :</strong> Utiliser des images et mots anxiogènes ("criminalité qui menace nos familles").
+                            </div>
+                        </div>
+                        
+                        <div class="technique-item">
+                            <div class="technique-number">6</div>
+                            <div>
+                                <strong>Amalgames :</strong> Associer artificiellement des concepts (patriotisme = extrême-droite).
+                            </div>
+                        </div>
+                        
+                        <div class="technique-item">
+                            <div class="technique-number">7</div>
+                            <div>
+                                <strong>Données trompeuses :</strong> Graphiques sans source, statistiques inventées ou hors contexte.
+                            </div>
+                        </div>
+                        
+                        <div class="technique-item">
+                            <div class="technique-number">8</div>
+                            <div>
+                                <strong>Polarisation forcée :</strong> Pousser à la division en diabolisant "l'autre camp".
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="resources">
+                        <h3>📖 Pour aller plus loin : Comment repérer les tests biaisés ?</h3>
+                        <div style="padding: 10px; background: white; border-radius: 5px;">
+                            <p><strong>Conseils pratiques :</strong></p>
+                            <ul style="margin: 10px 0; padding-left: 20px; line-height: 1.8;">
+                                <li>Méfiez-vous des questions qui contiennent déjà leur réponse</li>
+                                <li>Vérifiez s'il y a des options modérées et nuancées</li>
+                                <li>Repérez le vocabulaire émotionnel et les images manipulatrices</li>
+                                <li>Questionnez les sources des statistiques présentées</li>
+                                <li>Un vrai test scientifique utilise des questions validées et neutres</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <button class="restart-btn" onclick="restart()">🔄 Recommencer la démonstration</button>
+                </div>
+            `;
+
+            document.querySelector('.content').innerHTML = html;
+        }
+
+        function restart() {
+            currentQuestion = 0;
+            answers = [];
+            biasRevealed = [];
+            document.getElementById('header').classList.remove('biased');
+            document.getElementById('subtitle').textContent = "Découvrez votre vraie orientation politique en 8 questions";
+            document.querySelector('.content').innerHTML = `
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress" style="width: 0%"></div>
+                </div>
+                <div id="questionContainer"></div>
+            `;
+            showQuestion();
+        }
+
+        // Démarrer le test
+        showQuestion();
+    </script>
+</body>
+</html>

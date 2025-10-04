@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test d'Orientation Politique</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --radius: 16px;
+            --shadow: 0 10px 40px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            padding: 10px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 219, 98, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(1deg); }
+            66% { transform: translate(-20px, 20px) rotate(-1deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: clamp(20px, 5vw, 50px);
+            box-shadow: var(--shadow-lg);
+            animation: slideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        h1 {
+            color: var(--dark);
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+            font-weight: 500;
+        }
+
+        .progress-container {
+            margin-bottom: 25px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .question-container {
+            margin-bottom: 25px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question {
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            color: var(--dark);
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .question-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 0.9rem;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option {
+            padding: clamp(12px, 2vw, 18px);
+            border: 2.5px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0.1;
+            transition: width 0.3s ease;
+            z-index: 0;
+        }
+
+        .option:hover::before {
+            width: 100%;
+        }
+
+        .option:hover {
+            border-color: var(--primary);
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .option.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
+        }
+
+        .option-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .option-label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .option-description {
+            font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+            color: var(--gray);
+            line-height: 1.4;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 12px;
+        }
+
+        button {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: var(--gray);
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+
+        .btn-start {
+            display: block;
+            margin: 30px auto;
+            padding: 16px 40px;
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            box-shadow: 0 6px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-start::after {
+            content: '→';
+            margin-left: 8px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-start:hover::after {
+            transform: translateX(4px);
+        }
+
+        #results {
+            display: none;
+        }
+
+        .result-title {
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
+            color: var(--dark);
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .axis-result {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .axis-name {
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 12px;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+        }
+
+        .axis-bar {
+            position: relative;
+            height: 35px;
+            background: linear-gradient(90deg, 
+                #ef4444 0%, 
+                #f59e0b 25%, 
+                #fbbf24 50%, 
+                #84cc16 75%, 
+                #10b981 100%);
+            border-radius: 20px;
+            margin-bottom: 10px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .axis-marker {
+            position: absolute;
+            top: -2.5px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .axis-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .political-position {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-radius: 16px;
+            margin-top: 30px;
+            border: 2px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .position-title {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .position-name {
+            font-size: clamp(1.6rem, 4vw, 2rem);
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .position-description {
+            color: var(--gray);
+            line-height: 1.7;
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+        }
+
+        .radar-container {
+            margin: 30px auto;
+            max-width: min(400px, 100%);
+            aspect-ratio: 1;
+        }
+
+        #radarChart {
+            width: 100%;
+            height: 100%;
+        }
+
+        #intro, #questionnaire, #results {
+            display: none;
+        }
+
+        #intro {
+            display: block;
+            text-align: center;
+        }
+
+        .intro-text {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            line-height: 1.8;
+            color: var(--gray);
+            margin: 20px 0;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .feature {
+            padding: 15px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .feature-text {
+            font-size: 0.95rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .disclaimer {
+            background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+            border-left: 4px solid var(--warning);
+            padding: 16px;
+            margin: 25px 0;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .disclaimer-title {
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .disclaimer-text {
+            color: #78350f;
+            font-size: clamp(0.9rem, 2vw, 0.95rem);
+            line-height: 1.5;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 640px) {
+            body {
+                padding: 8px;
+            }
+
+            .card {
+                border-radius: 12px;
+            }
+
+            .navigation {
+                flex-direction: column-reverse;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 400px) {
+            .option-label {
+                font-size: 0.95rem;
+            }
+
+            .option-description {
+                font-size: 0.85rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations d'entrée pour les éléments */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Effet de pulsation pour le bouton désactivé */
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.7; }
+        }
+
+        button:disabled {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div id="intro">
+                <h1>Test d'Orientation Politique</h1>
+                <p class="subtitle">Découvrez votre positionnement politique de manière nuancée</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">💰</div>
+                        <div class="feature-text">Économique</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🏛️</div>
+                        <div class="feature-text">Social</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">⚖️</div>
+                        <div class="feature-text">Autorité</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🌍</div>
+                        <div class="feature-text">International</div>
+                    </div>
+                </div>
+
+                <div class="intro-text">
+                    <p><strong>24 questions</strong> pour analyser vos positions selon 4 axes majeurs.</p>
+                    <p>Découvrez parmi <strong>12 tendances politiques</strong> celle qui vous correspond.</p>
+                </div>
+
+                <div class="disclaimer">
+                    <div class="disclaimer-title">
+                        <span>⚠️</span>
+                        <span>Note importante</span>
+                    </div>
+                    <div class="disclaimer-text">
+                        Ce test est un outil de réflexion. Les résultats sont simplifiés et ne peuvent capturer toute la complexité de vos opinions politiques.
+                    </div>
+                </div>
+
+                <button class="btn-primary btn-start" onclick="startTest()">Commencer le test</button>
+            </div>
+
+            <div id="questionnaire">
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span id="progressText">Question 1/24</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar"></div>
+                    </div>
+                </div>
+                
+                <div class="question-container">
+                    <div class="question" id="questionText"></div>
+                    <div class="options" id="optionsContainer"></div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="btn-secondary" id="prevBtn" onclick="previousQuestion()">← Précédent</button>
+                    <button class="btn-primary" id="nextBtn" onclick="nextQuestion()">Suivant</button>
+                </div>
+            </div>
+
+            <div id="results">
+                <h2 class="result-title">📊 Vos Résultats</h2>
+                
+                <div class="radar-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                
+                <div id="axisResults"></div>
+                
+                <div class="political-position" id="politicalPosition"></div>
+                
+                <button class="btn-primary btn-start" onclick="restartTest()">Refaire le test</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // Axe Économique
+            {
+                text: "Comment l'État devrait-il intervenir dans l'économie ?",
+                axis: "economic",
+                options: [
+                    { text: "Intervention minimale", description: "Le marché se régule mieux sans l'État", value: 100 },
+                    { text: "Intervention modérée", description: "L'État doit corriger les défaillances du marché", value: 60 },
+                    { text: "Intervention importante", description: "L'État doit réguler et redistribuer activement", value: 20 },
+                    { text: "Économie planifiée", description: "L'État doit diriger l'économie", value: 0 }
+                ]
+            },
+            {
+                text: "Quelle devrait être la priorité en matière de fiscalité ?",
+                axis: "economic",
+                options: [
+                    { text: "Réduire les impôts", description: "Laisser plus d'argent aux citoyens et entreprises", value: 90 },
+                    { text: "Équilibre fiscal", description: "Impôts modérés pour services publics essentiels", value: 55 },
+                    { text: "Redistribution forte", description: "Impôts progressifs pour réduire les inégalités", value: 20 },
+                    { text: "Taxation maximale", description: "Forte imposition pour financer l'État providence", value: 5 }
+                ]
+            },
+            {
+                text: "Comment voyez-vous la propriété privée ?",
+                axis: "economic",
+                options: [
+                    { text: "Droit fondamental", description: "Inviolable et sacrée", value: 100 },
+                    { text: "Droit important", description: "À protéger avec quelques limites", value: 70 },
+                    { text: "Droit conditionnel", description: "Soumis à l'intérêt général", value: 30 },
+                    { text: "À abolir", description: "Source d'inégalités", value: 0 }
+                ]
+            },
+            {
+                text: "Que pensez-vous du salaire minimum ?",
+                axis: "economic",
+                options: [
+                    { text: "À supprimer", description: "Le marché fixe les salaires", value: 95 },
+                    { text: "Minimal", description: "Juste pour éviter l'exploitation", value: 65 },
+                    { text: "Décent", description: "Permettre de vivre dignement", value: 35 },
+                    { text: "Élevé", description: "Réduire fortement les inégalités", value: 10 }
+                ]
+            },
+            {
+                text: "Comment financer la protection sociale ?",
+                axis: "economic",
+                options: [
+                    { text: "Assurances privées", description: "Chacun s'assure selon ses moyens", value: 90 },
+                    { text: "Système mixte", description: "Base publique + complémentaires privées", value: 60 },
+                    { text: "Sécurité sociale forte", description: "Système public universel", value: 25 },
+                    { text: "État providence total", description: "Gratuité complète financée par l'impôt", value: 5 }
+                ]
+            },
+            {
+                text: "Quelle politique pour les services publics ?",
+                axis: "economic",
+                options: [
+                    { text: "Privatisation maximale", description: "Le privé est plus efficace", value: 95 },
+                    { text: "Privatisation partielle", description: "Garder les services essentiels publics", value: 65 },
+                    { text: "Services publics forts", description: "Maintenir et développer le public", value: 30 },
+                    { text: "Tout nationaliser", description: "Aucun service aux mains du privé", value: 5 }
+                ]
+            },
+
+            // Axe Social/Sociétal
+            {
+                text: "Quelle est votre position sur le mariage pour tous ?",
+                axis: "social",
+                options: [
+                    { text: "Totalement favorable", description: "Égalité des droits pour tous", value: 100 },
+                    { text: "Plutôt favorable", description: "Avec quelques réserves", value: 70 },
+                    { text: "Plutôt défavorable", description: "Préférence pour l'union civile", value: 30 },
+                    { text: "Totalement opposé", description: "Le mariage est entre homme et femme", value: 0 }
+                ]
+            },
+            {
+                text: "Comment voyez-vous l'évolution des mœurs ?",
+                axis: "social",
+                options: [
+                    { text: "Changement nécessaire", description: "La société doit progresser rapidement", value: 95 },
+                    { text: "Évolution progressive", description: "Les changements doivent être mesurés", value: 65 },
+                    { text: "Prudence requise", description: "Préserver ce qui fonctionne", value: 35 },
+                    { text: "Retour aux traditions", description: "On va trop loin dans le changement", value: 5 }
+                ]
+            },
+            {
+                text: "Quelle politique d'immigration préconisez-vous ?",
+                axis: "social",
+                options: [
+                    { text: "Ouverture maximale", description: "Liberté de circulation totale", value: 100 },
+                    { text: "Immigration régulée", description: "Accueil selon nos capacités", value: 65 },
+                    { text: "Immigration restrictive", description: "Limiter fortement les flux", value: 30 },
+                    { text: "Fermeture des frontières", description: "Immigration zéro", value: 0 }
+                ]
+            },
+            {
+                text: "Comment aborder les questions de genre ?",
+                axis: "social",
+                options: [
+                    { text: "Déconstruction totale", description: "Abolir toutes les normes de genre", value: 100 },
+                    { text: "Égalité et inclusion", description: "Lutter contre les discriminations", value: 70 },
+                    { text: "Complémentarité", description: "Hommes et femmes sont différents mais égaux", value: 30 },
+                    { text: "Rôles traditionnels", description: "Chaque sexe a son rôle naturel", value: 0 }
+                ]
+            },
+            {
+                text: "Quelle place pour la religion dans la société ?",
+                axis: "social",
+                options: [
+                    { text: "Laïcité stricte", description: "Aucune place dans l'espace public", value: 85 },
+                    { text: "Laïcité ouverte", description: "Respect de toutes les croyances", value: 60 },
+                    { text: "Valeurs religieuses", description: "S'inspirer des traditions religieuses", value: 25 },
+                    { text: "Société religieuse", description: "La religion guide la société", value: 5 }
+                ]
+            },
+            {
+                text: "Comment voyez-vous l'avortement ?",
+                axis: "social",
+                options: [
+                    { text: "Droit fondamental", description: "Sans aucune restriction", value: 100 },
+                    { text: "Droit encadré", description: "Avec délais légaux", value: 70 },
+                    { text: "Cas exceptionnels", description: "Seulement si danger ou viol", value: 25 },
+                    { text: "Interdiction totale", description: "La vie commence à la conception", value: 0 }
+                ]
+            },
+
+            // Axe Autorité
+            {
+                text: "Quel équilibre entre sécurité et liberté ?",
+                axis: "authority",
+                options: [
+                    { text: "Liberté absolue", description: "Aucune surveillance acceptable", value: 0 },
+                    { text: "Liberté prioritaire", description: "Surveillance minimale et encadrée", value: 30 },
+                    { text: "Équilibre nécessaire", description: "Accepter certaines contraintes pour la sécurité", value: 65 },
+                    { text: "Sécurité d'abord", description: "La surveillance protège les honnêtes gens", value: 100 }
+                ]
+            },
+            {
+                text: "Comment répondre à la délinquance ?",
+                axis: "authority",
+                options: [
+                    { text: "Prévention totale", description: "S'attaquer aux causes sociales", value: 10 },
+                    { text: "Prévention et sanctions", description: "Équilibre entre les deux", value: 40 },
+                    { text: "Fermeté judiciaire", description: "Des peines plus sévères", value: 70 },
+                    { text: "Tolérance zéro", description: "Répression maximale", value: 100 }
+                ]
+            },
+            {
+                text: "Quelle place pour les forces de l'ordre ?",
+                axis: "authority",
+                options: [
+                    { text: "À réduire", description: "Trop de pouvoir policier", value: 5 },
+                    { text: "À contrôler", description: "Plus de supervision citoyenne", value: 30 },
+                    { text: "À soutenir", description: "Respecter leur travail difficile", value: 70 },
+                    { text: "À renforcer", description: "Plus de moyens et de pouvoirs", value: 95 }
+                ]
+            },
+            {
+                text: "Comment gérer les manifestations ?",
+                axis: "authority",
+                options: [
+                    { text: "Liberté totale", description: "Droit absolu de manifester", value: 5 },
+                    { text: "Droit encadré", description: "Déclaration mais pas d'autorisation", value: 35 },
+                    { text: "Régulation stricte", description: "Autorisation nécessaire", value: 70 },
+                    { text: "Limitation forte", description: "L'ordre prime sur la manifestation", value: 100 }
+                ]
+            },
+            {
+                text: "Quelle politique pour les drogues ?",
+                axis: "authority",
+                options: [
+                    { text: "Légalisation totale", description: "Liberté individuelle complète", value: 5 },
+                    { text: "Dépénalisation", description: "Traiter comme problème de santé", value: 30 },
+                    { text: "Statu quo", description: "Maintenir les interdictions actuelles", value: 70 },
+                    { text: "Guerre totale", description: "Répression maximale", value: 100 }
+                ]
+            },
+            {
+                text: "Comment organiser le pouvoir politique ?",
+                axis: "authority",
+                options: [
+                    { text: "Démocratie directe", description: "Le peuple décide de tout", value: 10 },
+                    { text: "Parlementarisme fort", description: "Le parlement contrôle l'exécutif", value: 35 },
+                    { text: "Exécutif fort", description: "Un leader fort pour décider", value: 75 },
+                    { text: "Autorité absolue", description: "Le chef a tous les pouvoirs", value: 100 }
+                ]
+            },
+
+            // Axe International
+            {
+                text: "Quelle vision de l'Europe ?",
+                axis: "international",
+                options: [
+                    { text: "Fédération européenne", description: "États-Unis d'Europe", value: 100 },
+                    { text: "Intégration renforcée", description: "Plus de coopération", value: 70 },
+                    { text: "Europe des nations", description: "Coopération limitée", value: 35 },
+                    { text: "Sortie de l'UE", description: "Retrouver notre souveraineté", value: 5 }
+                ]
+            },
+            {
+                text: "Comment gérer la mondialisation ?",
+                axis: "international",
+                options: [
+                    { text: "L'embrasser totalement", description: "Abolir les frontières économiques", value: 100 },
+                    { text: "L'accompagner", description: "S'adapter intelligemment", value: 65 },
+                    { text: "La réguler fortement", description: "Protéger nos intérêts", value: 30 },
+                    { text: "S'en protéger", description: "Priorité nationale absolue", value: 0 }
+                ]
+            },
+            {
+                text: "Quelle politique de défense ?",
+                axis: "international",
+                options: [
+                    { text: "Désarmement", description: "Investir dans la paix", value: 90 },
+                    { text: "Défense européenne", description: "Armée commune européenne", value: 65 },
+                    { text: "Défense nationale", description: "Armée forte et indépendante", value: 30 },
+                    { text: "Puissance militaire", description: "Projeter notre force", value: 10 }
+                ]
+            },
+            {
+                text: "Comment aider les pays en développement ?",
+                axis: "international",
+                options: [
+                    { text: "Aide massive", description: "Devoir moral d'aider", value: 95 },
+                    { text: "Aide ciblée", description: "Projets de développement", value: 65 },
+                    { text: "Aide conditionnée", description: "Selon nos intérêts", value: 35 },
+                    { text: "Aucune aide", description: "Chaque pays pour soi", value: 5 }
+                ]
+            },
+            {
+                text: "Quelle position sur le libre-échange ?",
+                axis: "international",
+                options: [
+                    { text: "Libre-échange total", description: "Aucune barrière commerciale", value: 100 },
+                    { text: "Accords commerciaux", description: "Négocier des partenariats", value: 70 },
+                    { text: "Protectionnisme modéré", description: "Protéger nos industries", value: 35 },
+                    { text: "Autarcie", description: "Produire français, acheter français", value: 5 }
+                ]
+            },
+            {
+                text: "Comment gérer l'identité nationale ?",
+                axis: "international",
+                options: [
+                    { text: "Citoyen du monde", description: "Dépasser les nations", value: 100 },
+                    { text: "Multiculturalisme", description: "Enrichissement par la diversité", value: 70 },
+                    { text: "Intégration républicaine", description: "Assimilation aux valeurs nationales", value: 35 },
+                    { text: "Identité forte", description: "Préserver notre culture", value: 5 }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = [];
+        let shuffledOptions = [];
+
+        // Fonction pour mélanger un tableau (Fisher-Yates)
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function startTest() {
+            // Préparer les options mélangées pour chaque question
+            shuffledOptions = questions.map(q => 
+                shuffleArray(q.options.map((opt, idx) => ({...opt, originalIndex: idx})))
+            );
+            
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('questionnaire').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            const questionNum = currentQuestion + 1;
+            
+            // Mise à jour du texte de la question
+            document.getElementById('questionText').innerHTML = 
+                `<span class="question-number">${questionNum}</span>${question.text}`;
+            
+            // Mise à jour de la progression
+            document.getElementById('progressText').textContent = `Question ${questionNum}/${questions.length}`;
+            document.getElementById('progressPercent').textContent = `${Math.round((questionNum / questions.length) * 100)}%`;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            // Utiliser les options mélangées
+            const options = shuffledOptions[currentQuestion];
+            
+            options.forEach((option, displayIndex) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                
+                // Vérifier si cette option était sélectionnée
+                if (answers[currentQuestion] !== undefined && 
+                    questions[currentQuestion].options[answers[currentQuestion]].text === option.text) {
+                    optionDiv.classList.add('selected');
+                }
+                
+                optionDiv.innerHTML = `
+                    <div class="option-content">
+                        <span class="option-label">${option.text}</span>
+                        <span class="option-description">${option.description}</span>
+                    </div>
+                `;
+                optionDiv.onclick = () => selectOption(option.originalIndex);
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            // Animation d'entrée
+            optionsContainer.classList.add('fade-in');
+            
+            updateProgress();
+            updateNavigation();
+        }
+
+        function selectOption(originalIndex) {
+            answers[currentQuestion] = originalIndex;
+            
+            // Mettre à jour l'affichage de la sélection
+            const options = shuffledOptions[currentQuestion];
+            document.querySelectorAll('.option').forEach((opt, displayIndex) => {
+                const option = options[displayIndex];
+                opt.classList.toggle('selected', option.originalIndex === originalIndex);
+            });
+            
+            updateNavigation();
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.style.display = currentQuestion > 0 ? 'block' : 'none';
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerHTML = 'Voir les résultats →';
+            } else {
+                nextBtn.innerHTML = 'Suivant →';
+            }
+            
+            nextBtn.disabled = answers[currentQuestion] === undefined;
+        }
+
+        function nextQuestion() {
+            if (answers[currentQuestion] === undefined) return;
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+
+        function calculateResults() {
+            const axes = {
+                economic: [],
+                social: [],
+                authority: [],
+                international: []
+            };
+            
+            questions.forEach((question, index) => {
+                if (answers[index] !== undefined) {
+                    const selectedOption = question.options[answers[index]];
+                    axes[question.axis].push(selectedOption.value);
+                }
+            });
+            
+            const results = {};
+            for (let axis in axes) {
+                if (axes[axis].length > 0) {
+                    results[axis] = Math.round(axes[axis].reduce((a, b) => a + b) / axes[axis].length);
+                }
+            }
+            
+            return results;
+        }
+
+        function determinePoliticalPosition(results) {
+            const economicScore = results.economic || 50;
+            const socialScore = results.social || 50;
+            const authorityScore = results.authority || 50;
+            const internationalScore = results.international || 50;
+            
+            // Matrice de positionnement politique
+            if (economicScore < 30 && socialScore > 60 && authorityScore < 40) {
+                return {
+                    name: "Gauche Libertaire",
+                    description: "Vision progressiste socialement, favorable à une économie sociale et solidaire, avec une approche anti-autoritaire. Vous privilégiez l'émancipation individuelle et collective, la justice sociale et l'écologie."
+                };
+            } else if (economicScore < 30 && socialScore < 40 && authorityScore > 60) {
+                return {
+                    name: "Gauche Conservatrice",
+                    description: "Position rare combinant interventionnisme économique et conservatisme social. Favorable à l'État providence mais attaché aux valeurs traditionnelles et à l'ordre."
+                };
+            } else if (economicScore < 40 && socialScore > 50 && internationalScore > 60) {
+                return {
+                    name: "Gauche Sociale-Démocrate",
+                    description: "Favorable à une économie mixte régulée, progressiste sur les questions sociales, pro-européen. Vous croyez en un capitalisme encadré avec une forte protection sociale."
+                };
+            } else if (economicScore < 30 && authorityScore > 70) {
+                return {
+                    name: "Gauche Autoritaire",
+                    description: "Interventionnisme économique fort couplé à un État puissant. Vision planificatrice de l'économie avec un contrôle étatique important."
+                };
+            } else if (economicScore > 70 && socialScore > 60 && authorityScore < 40) {
+                return {
+                    name: "Libéral Progressiste",
+                    description: "Libéral économiquement, progressiste socialement, attaché aux libertés individuelles. Vous défendez le libre marché tout en soutenant les droits des minorités et l'évolution des mœurs."
+                };
+            } else if (economicScore > 60 && socialScore < 40 && authorityScore > 60) {
+                return {
+                    name: "Droite Conservatrice",
+                    description: "Libéral en économie, conservateur sur les questions de société, favorable à un État fort sur les questions régaliennes. Attaché aux traditions et à l'ordre établi."
+                };
+            } else if (economicScore > 70 && authorityScore < 30) {
+                return {
+                    name: "Libertarien",
+                    description: "Maximaliste de la liberté individuelle, opposé à toute forme d'intervention étatique. Vous prônez le libre marché total et la responsabilité individuelle absolue."
+                };
+            } else if (economicScore > 50 && internationalScore < 30 && authorityScore > 60) {
+                return {
+                    name: "Droite Nationaliste",
+                    description: "Souverainiste, protectionniste, conservateur. Vous privilégiez l'identité nationale, la sécurité et l'indépendance du pays face à la mondialisation."
+                };
+            } else if (Math.abs(economicScore - 50) < 20 && Math.abs(socialScore - 50) < 20) {
+                return {
+                    name: "Centre",
+                    description: "Position modérée et pragmatique, favorable aux compromis et à l'équilibre entre différentes valeurs. Vous recherchez le juste milieu entre liberté et régulation, tradition et progrès."
+                };
+            } else if (economicScore < 40 && internationalScore < 30) {
+                return {
+                    name: "Gauche Souverainiste",
+                    description: "Interventionniste économiquement mais critique de la mondialisation et de l'Europe libérale. Vous défendez la souveraineté populaire et nationale face aux marchés."
+                };
+            } else if (economicScore > 60 && socialScore > 60 && internationalScore > 60) {
+                return {
+                    name: "Libéral Mondialiste",
+                    description: "Favorable au libre-échange, à l'ouverture des frontières et aux valeurs progressistes. Vous croyez en un monde interconnecté et ouvert."
+                };
+            } else {
+                return {
+                    name: "Position Hybride",
+                    description: "Vos positions ne correspondent pas aux catégories politiques traditionnelles. Vous avez des opinions nuancées qui transcendent les clivages habituels."
+                };
+            }
+        }
+
+        function showResults() {
+            document.getElementById('questionnaire').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            
+            const results = calculateResults();
+            const position = determinePoliticalPosition(results);
+            
+            // Afficher les axes
+            const axisResultsDiv = document.getElementById('axisResults');
+            axisResultsDiv.innerHTML = '';
+            
+            const axisInfo = {
+                economic: {
+                    name: "💰 Axe Économique",
+                    left: "← Interventionnisme",
+                    right: "Libéralisme →"
+                },
+                social: {
+                    name: "🏛️ Axe Sociétal",
+                    left: "← Conservatisme",
+                    right: "Progressisme →"
+                },
+                authority: {
+                    name: "⚖️ Axe Autorité",
+                    left: "← Libertaire",
+                    right: "Autoritaire →"
+                },
+                international: {
+                    name: "🌍 Axe International",
+                    left: "← Souverainisme",
+                    right: "Mondialisme →"
+                }
+            };
+            
+            for (let axis in results) {
+                const axisDiv = document.createElement('div');
+                axisDiv.className = 'axis-result';
+                axisDiv.innerHTML = `
+                    <div class="axis-name">${axisInfo[axis].name}</div>
+                    <div class="axis-bar">
+                        <div class="axis-marker" style="left: ${results[axis]}%"></div>
+                    </div>
+                    <div class="axis-labels">
+                        <span>${axisInfo[axis].left}</span>
+                        <span>${axisInfo[axis].right}</span>
+                    </div>
+                `;
+                axisResultsDiv.appendChild(axisDiv);
+            }
+            
+            // Afficher la position politique
+            document.getElementById('politicalPosition').innerHTML = `
+                <div class="position-title">Votre tendance politique :</div>
+                <div class="position-name">${position.name}</div>
+                <div class="position-description">${position.description}</div>
+            `;
+            
+            // Dessiner le graphique radar
+            drawRadarChart(results);
+        }
+
+        function drawRadarChart(results) {
+            const canvas = document.getElementById('radarChart');
+            const ctx = canvas.getContext('2d');
+            const size = Math.min(canvas.parentElement.offsetWidth, 400);
+            canvas.width = size;
+            canvas.height = size;
+            
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const radius = size * 0.35;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Axes du radar
+            const axes = [
+                { name: 'Économie\nlibérale', value: results.economic || 50 },
+                { name: 'Progressisme\nsocial', value: results.social || 50 },
+                { name: 'Autorité', value: results.authority || 50 },
+                { name: 'Mondialisme', value: results.international || 50 }
+            ];
+            
+            const angleStep = (Math.PI * 2) / axes.length;
+            
+            // Dessiner les cercles de fond
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+            for (let i = 1; i <= 5; i++) {
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, (radius / 5) * i, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            
+            // Dessiner les axes
+            ctx.strokeStyle = '#cbd5e1';
+            axes.forEach((axis, index) => {
+                const angle = angleStep * index - Math.PI / 2;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                
+                // Labels
+                const labelX = centerX + Math.cos(angle) * (radius + size * 0.08);
+                const labelY = centerY + Math.sin(angle) * (radius + size * 0.08);
+                ctx.fillStyle = '#334155';
+                ctx.font = `${size * 0.035}px -apple-system, sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                const lines = axis.name.split('\n');
+                lines.forEach((line, i) => {
+                    ctx.fillText(line, labelX, labelY + i * (size * 0.04) - (lines.length - 1) * (size * 0.02));
+                });
+            });
+            
+            // Dessiner le polygone des résultats
+            const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+            gradient.addColorStop(0, 'rgba(99, 102, 241, 0.4)');
+            gradient.addColorStop(1, 'rgba(139, 92, 246, 0.2)');
+            ctx.fillStyle = gradient;
+            ctx.strokeStyle = '#6366f1';
+            ctx.lineWidth = 2.5;
+            
+            ctx.beginPath();
+            axes.forEach((axis, index) => {
+                const angle = angleStep * index - Math.PI / 2;
+                const value = axis.value / 100;
+                const x = centerX + Math.cos(angle) * radius * value;
+                const y = centerY + Math.sin(angle) * radius * value;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // Points sur les axes
+            axes.forEach((axis, index) => {
+                const angle = angleStep * index - Math.PI / 2;
+                const value = axis.value / 100;
+                const x = centerX + Math.cos(angle) * radius * value;
+                const y = centerY + Math.sin(angle) * radius * value;
+                
+                ctx.fillStyle = '#6366f1';
+                ctx.beginPath();
+                ctx.arc(x, y, size * 0.015, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+        }
+
+        function restartTest() {
+            currentQuestion = 0;
+            answers = [];
+            shuffledOptions = [];
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('intro').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

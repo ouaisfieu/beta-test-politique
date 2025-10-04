@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test ultime : exploration de vos valeurs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      color: #030A18;
+    }
+    header {
+      background: #97B1DF;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    #quiz-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin-bottom: 0.5rem;
+      padding: 0.8rem;
+      border: 1px solid #97B1DF;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .options button:hover {
+      background: #e7ecf5;
+    }
+    .options button.selected {
+      background: #97B1DF;
+      color: white;
+    }
+    #next-btn {
+      padding: 0.8rem 1.5rem;
+      background: #030A18;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    #results {
+      display: none;
+    }
+    canvas {
+      max-width: 100%;
+    }
+    @media (max-width: 600px) {
+      #quiz-container {
+        margin: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Test ultime : exploration de vos valeurs</h1>
+  </header>
+  <div id="quiz-container">
+    <div id="question-screen">
+      <div id="question-text" class="question"></div>
+      <div id="options" class="options"></div>
+      <button id="next-btn" disabled>Suivant</button>
+    </div>
+    <div id="results">
+      <h2>Vos résultats</h2>
+      <canvas id="resultChart"></canvas>
+      <p>
+        Ces graphiques reflètent vos réponses selon plusieurs dimensions (économique, sociale, environnementale et culturelle).
+        Ils ne constituent pas un classement ou une étiquette politique. Leur objectif est de stimuler la réflexion et la nuance.
+      </p>
+    </div>
+  </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Liste des questions et dimensions associées
+    const questions = [
+      { text: "L'État devrait augmenter la redistribution des richesses.", dimension: "economique" },
+      { text: "La liberté individuelle doit primer sur la sécurité collective.", dimension: "sociale" },
+      { text: "Les entreprises devraient être moins réglementées.", dimension: "economique" },
+      { text: "Il faudrait augmenter le pouvoir de la police pour maintenir l'ordre.", dimension: "sociale" },
+      { text: "Les politiques environnementales doivent être prioritaires, même au détriment de l'économie.", dimension: "environnement" },
+      { text: "Les traditions culturelles doivent être préservées même si elles semblent dépassées.", dimension: "culturel" },
+      { text: "Une hausse des impôts pour financer les services publics est acceptable.", dimension: "economique" },
+      { text: "L'accès à l'information doit être restreint pour protéger la société de contenus dangereux.", dimension: "sociale" },
+    ];
+    // Étiquettes et valeurs pour l'échelle de réponse
+    const optionLabels = [
+      "Pas du tout d'accord",
+      "Pas d'accord",
+      "Indifférent",
+      "D'accord",
+      "Tout à fait d'accord",
+    ];
+    const optionValues = [-2, -1, 0, 1, 2];
+
+    let currentQuestion = 0;
+    const responses = [];
+    const questionTextEl = document.getElementById("question-text");
+    const optionsEl = document.getElementById("options");
+    const nextBtn = document.getElementById("next-btn");
+
+    function renderQuestion() {
+      nextBtn.disabled = true;
+      const q = questions[currentQuestion];
+      questionTextEl.textContent = q.text;
+      optionsEl.innerHTML = "";
+      optionLabels.forEach((label, idx) => {
+        const btn = document.createElement("button");
+        btn.textContent = label;
+        btn.addEventListener("click", () => {
+          // Désélectionner les autres options
+          Array.from(optionsEl.children).forEach((b) => b.classList.remove("selected"));
+          btn.classList.add("selected");
+          // Enregistrer la réponse
+          responses[currentQuestion] = { value: optionValues[idx], dimension: q.dimension };
+          nextBtn.disabled = false;
+        });
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    nextBtn.addEventListener("click", () => {
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    });
+
+    function showResults() {
+      document.getElementById("question-screen").style.display = "none";
+      document.getElementById("results").style.display = "block";
+      // Agréger les scores par dimension
+      const scores = {};
+      const counts = {};
+      responses.forEach((resp) => {
+        scores[resp.dimension] = (scores[resp.dimension] || 0) + resp.value;
+        counts[resp.dimension] = (counts[resp.dimension] || 0) + 1;
+      });
+      const dimensions = Object.keys(scores);
+      const avgScores = dimensions.map((dim) => scores[dim] / counts[dim]);
+      // Création du graphique radar
+      const ctx = document.getElementById("resultChart").getContext("2d");
+      new Chart(ctx, {
+        type: "radar",
+        data: {
+          labels: dimensions.map((dim) => dim.charAt(0).toUpperCase() + dim.slice(1)),
+          datasets: [
+            {
+              label: "Votre profil",
+              data: avgScores,
+              fill: true,
+              backgroundColor: "rgba(151, 177, 223, 0.2)",
+              borderColor: "rgba(151, 177, 223, 1)",
+              pointBackgroundColor: "rgba(151, 177, 223, 1)",
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            r: {
+              suggestedMin: -2,
+              suggestedMax: 2,
+              ticks: {
+                stepSize: 1,
+                callback: function (value) {
+                  return value;
+                },
+              },
+            },
+          },
+          plugins: {
+            legend: { display: false },
+          },
+        },
+      });
+    }
+
+    // Initialiser le questionnaire
+    renderQuestion();
+  </script>
+</body>
+</html>
