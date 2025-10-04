@@ -1,6 +1,6 @@
 # Test Politique – Gauche, Droite et au‑delà
 
-Cette petite application Web propose un questionnaire rapide en 15 affirmations pour
+Cette [application Web](https://ouaisfieu.github.io/beta-test-politique/) propose un questionnaire rapide en 15 affirmations pour
 vous situer sur plusieurs axes politiques : économique (gauche/droite), social
 (progressiste/conservateur), environnemental et national. Elle classe votre
 profil en combinant ces axes pour tenter d'identifier la tendance qui vous
