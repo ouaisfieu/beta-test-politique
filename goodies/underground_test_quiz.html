@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test et quiz : institutionnaliser l'underground ?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 2rem;
+            background-color: #f4f4f4;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin: 0.5rem 0;
+        }
+        .question {
+            margin-bottom: 1rem;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fafafa;
+        }
+    </style>
+</head>
+<body>
+    <h1>Peut‑on institutionnaliser l'underground ?</h1>
+    <p>Cette page propose deux activités : un <strong>test d'opinion</strong> pour situer votre point de vue sur l'institutionnalisation de l'underground et un <strong>quiz grand public</strong> pour vérifier vos connaissances sur la culture underground et les débats qu'elle suscite. Les sources utilisées pour élaborer ces questions sont indiquées dans les instructions.</p>
+
+    <!-- Test d'opinion -->
+    <section id="test">
+        <h2>Test : votre position sur l'institutionnalisation de l'underground</h2>
+        <p>Pour chaque affirmation, choisissez votre degré d'accord. Les affirmations s'inspirent de travaux sur l'intégration de la culture hip‑hop à Montréal【629464372487130†L57-L99】, la massification de la techno【961262409745028†L104-L115】, l'essor des musées de street art【576799979170798†L229-L253】, la politisation de la contre‑culture québécoise【844174857587477†L33-L39】 et les réflexions sur la notion même d'underground【16116055275770†L97-L119】.</p>
+        <form id="opinionForm">
+            <div class="question">
+                <p>1. La culture underground est un mouvement contreculturel opposé à l'industrie culturelle et aux médias de masse【11276918388513†L174-L183】.</p>
+                <label><input type="radio" name="q1" value="3" required> D'accord</label>
+                <label><input type="radio" name="q1" value="2"> Plutôt d'accord</label>
+                <label><input type="radio" name="q1" value="1"> Pas d'accord</label>
+            </div>
+            <div class="question">
+                <p>2. Il est possible de préserver l'esprit contestataire de la techno tout en accueillant la scène dans des clubs et festivals officiels【961262409745028†L104-L115】.</p>
+                <label><input type="radio" name="q2" value="1" required> Pas du tout d'accord</label>
+                <label><input type="radio" name="q2" value="2"> Pas d'accord</label>
+                <label><input type="radio" name="q2" value="3"> Neutre</label>
+                <label><input type="radio" name="q2" value="4"> D'accord</label>
+                <label><input type="radio" name="q2" value="5"> Tout à fait d'accord</label>
+            </div>
+            <div class="question">
+                <p>3. Les collectifs hip‑hop comme Kalmunity et Urban Science montrent qu'une scène underground peut s'institutionnaliser en créant ses propres règles et réseaux【629464372487130†L57-L99】.</p>
+                <label><input type="radio" name="q3" value="1" required> Pas du tout d'accord</label>
+                <label><input type="radio" name="q3" value="2"> Pas d'accord</label>
+                <label><input type="radio" name="q3" value="3"> Neutre</label>
+                <label><input type="radio" name="q3" value="4"> D'accord</label>
+                <label><input type="radio" name="q3" value="5"> Tout à fait d'accord</label>
+            </div>
+            <div class="question">
+                <p>4. L'intégration du street art dans les musées peut légitimer les artistes sans dénaturer leur message【576799979170798†L229-L253】.</p>
+                <label><input type="radio" name="q4" value="1" required> Pas du tout d'accord</label>
+                <label><input type="radio" name="q4" value="2"> Pas d'accord</label>
+                <label><input type="radio" name="q4" value="3"> Neutre</label>
+                <label><input type="radio" name="q4" value="4"> D'accord</label>
+                <label><input type="radio" name="q4" value="5"> Tout à fait d'accord</label>
+            </div>
+            <div class="question">
+                <p>5. Les programmes de démocratie culturelle au Québec ont contribué à faire disparaître l'underground en intégrant la contre‑culture au système【844174857587477†L33-L60】.</p>
+                <label><input type="radio" name="q5" value="1" required> Pas du tout d'accord</label>
+                <label><input type="radio" name="q5" value="2"> Pas d'accord</label>
+                <label><input type="radio" name="q5" value="3"> Neutre</label>
+                <label><input type="radio" name="q5" value="4"> D'accord</label>
+                <label><input type="radio" name="q5" value="5"> Tout à fait d'accord</label>
+            </div>
+            <div class="question">
+                <p>6. L'idée d'underground est surtout un fantasme, parfois récupéré comme argument de vente par l'industrie culturelle【16116055275770†L97-L119】.</p>
+                <label><input type="radio" name="q6" value="1" required> Pas du tout d'accord</label>
+                <label><input type="radio" name="q6" value="2"> Pas d'accord</label>
+                <label><input type="radio" name="q6" value="3"> Neutre</label>
+                <label><input type="radio" name="q6" value="4"> D'accord</label>
+                <label><input type="radio" name="q6" value="5"> Tout à fait d'accord</label>
+            </div>
+            <div class="question">
+                <p>7. Les mouvements underground doivent rester marginaux et illégaux pour conserver leur authenticité.</p>
+                <label><input type="radio" name="q7" value="1" required> Pas du tout d'accord</label>
+                <label><input type="radio" name="q7" value="2"> Pas d'accord</label>
+                <label><input type="radio" name="q7" value="3"> Neutre</label>
+                <label><input type="radio" name="q7" value="4"> D'accord</label>
+                <label><input type="radio" name="q7" value="5"> Tout à fait d'accord</label>
+            </div>
+            <button type="button" onclick="calculateOpinion()">Calculer mon résultat</button>
+        </form>
+        <div id="testResult" class="result"></div>
+    </section>
+
+    <!-- Quiz grand public -->
+    <section id="quiz">
+        <h2>Quiz : vos connaissances sur l'underground</h2>
+        <p>Choisissez la bonne réponse pour chacune des questions. Les questions s'appuient sur des faits tirés de publications universitaires et de presse. À la fin, vous verrez votre score.</p>
+        <form id="quizForm">
+            <div class="question">
+                <p>1. Qu'est‑ce que l'underground ?</p>
+                <label><input type="radio" name="mq1" value="a" required> Un mouvement contreculturel opposé à l'industrie culturelle et aux médias de masse【11276918388513†L174-L183】</label>
+                <label><input type="radio" name="mq1" value="b"> Un genre musical grand public</label>
+                <label><input type="radio" name="mq1" value="c"> Une technique marketing</label>
+            </div>
+            <div class="question">
+                <p>2. Pourquoi les collectifs Kalmunity et Urban Science sont‑ils importants pour la scène hip‑hop montréalaise ?</p>
+                <label><input type="radio" name="mq2" value="a" required> Ils centralisent les acteurs, créent des normes et offrent une visibilité à la scène underground【629464372487130†L57-L99】</label>
+                <label><input type="radio" name="mq2" value="b"> Ils organisent des concerts payants pour les maisons de disques</label>
+                <label><input type="radio" name="mq2" value="c"> Ils interdisent aux artistes de se produire</label>
+            </div>
+            <div class="question">
+                <p>3. Quelle critique majeure est formulée à propos de l'intégration du street art dans les musées ?</p>
+                <label><input type="radio" name="mq3" value="a" required> Elle risque de faire perdre au street art son originalité et sa liberté, même si elle apporte reconnaissance【576799979170798†L229-L253】</label>
+                <label><input type="radio" name="mq3" value="b"> Elle rend les œuvres invisibles au public</label>
+                <label><input type="radio" name="mq3" value="c"> Elle détruit complètement l'art urbain</label>
+            </div>
+            <div class="question">
+                <p>4. Qu'est‑ce que Jeff Mills craint concernant la massification de la scène techno ?</p>
+                <label><input type="radio" name="mq4" value="a" required> Que la techno devienne une musique « bubblegum » de classes moyennes【961262409745028†L104-L115】</label>
+                <label><input type="radio" name="mq4" value="b"> Qu'elle devienne plus expérimentale</label>
+                <label><input type="radio" name="mq4" value="c"> Qu'elle évolue vers le jazz</label>
+            </div>
+            <div class="question">
+                <p>5. Selon l'article sur l'animation socioculturelle au Québec, quel paradoxe entoure la contre‑culture ?</p>
+                <label><input type="radio" name="mq5" value="a" required> L'art subversif a été institutionnalisé dès sa naissance【844174857587477†L33-L39】</label>
+                <label><input type="radio" name="mq5" value="b"> La contre‑culture a toujours été rejetée par l'État</label>
+                <label><input type="radio" name="mq5" value="c"> Elle n'existait pas dans les années 1960</label>
+            </div>
+            <div class="question">
+                <p>6. Comment le texte « Le nécessaire fantasme d’underground » décrit‑il l'idée d'underground aujourd'hui ?</p>
+                <label><input type="radio" name="mq6" value="a" required> Un fantasme d'espaces résistants à la médiatisation, parfois récupéré comme argument marketing【16116055275770†L97-L119】</label>
+                <label><input type="radio" name="mq6" value="b"> Un concept bien défini et concret</label>
+                <label><input type="radio" name="mq6" value="c"> Un style de musique unique</label>
+            </div>
+            <button type="button" onclick="calculateQuiz()">Voir mon score</button>
+        </form>
+        <div id="quizResult" class="result"></div>
+    </section>
+
+    <script>
+    // Fonction pour calculer le résultat du test d'opinion
+    function calculateOpinion() {
+        var form = document.getElementById('opinionForm');
+        // Récupérer les valeurs sélectionnées
+        var q2 = parseInt(form.q2.value);
+        var q3 = parseInt(form.q3.value);
+        var q4 = parseInt(form.q4.value);
+        var q5 = parseInt(form.q5.value);
+        var q6 = parseInt(form.q6.value);
+        var q7 = parseInt(form.q7.value);
+        // Les affirmations q2, q3 et q4 soutiennent l'idée d'institutionnalisation (score direct)
+        var positive = q2 + q3 + q4;
+        // Les affirmations q5, q6 et q7 indiquent une position inverse (score renversé)
+        var negative = (6 - q5) + (6 - q6) + (6 - q7);
+        var total = positive + negative;
+        var message = '';
+        if (total >= 21) {
+            message = "<strong>Résultat : institutionnalisation possible</strong><br>Vous estimez qu'il est possible d'intégrer des pratiques underground dans des institutions ou événements officiels tout en préservant leur essence.";
+        } else if (total >= 14) {
+            message = "<strong>Résultat : position nuancée</strong><br>Pour vous, l'institutionnalisation peut être envisageable dans certaines conditions, mais elle comporte des risques de standardisation et de perte d'authenticité.";
+        } else {
+            message = "<strong>Résultat : institutionnalisation difficile</strong><br>Vous pensez que l'underground doit rester en marge pour conserver sa liberté et son caractère contestataire. Toute institutionalisation risque selon vous de l'altérer.";
+        }
+        document.getElementById('testResult').innerHTML = message;
+    }
+
+    // Fonction pour calculer le score du quiz
+    function calculateQuiz() {
+        var form = document.getElementById('quizForm');
+        var score = 0;
+        if (form.mq1.value === 'a') score++;
+        if (form.mq2.value === 'a') score++;
+        if (form.mq3.value === 'a') score++;
+        if (form.mq4.value === 'a') score++;
+        if (form.mq5.value === 'a') score++;
+        if (form.mq6.value === 'a') score++;
+        var resultMessage = "Vous avez obtenu " + score + "/6 bonnes réponses. ";
+        if (score === 6) {
+            resultMessage += "Excellent ! Vous maîtrisez les enjeux de la culture underground.";
+        } else if (score >= 4) {
+            resultMessage += "Bravo ! Vous avez une bonne compréhension, mais vous pouvez encore approfondir.";
+        } else if (score >= 2) {
+            resultMessage += "Pas mal ! Vous connaissez quelques aspects, mais il reste des points à découvrir.";
+        } else {
+            resultMessage += "Encore un effort ! Lisez les sources citées pour en savoir plus.";
+        }
+        document.getElementById('quizResult').innerHTML = resultMessage;
+    }
+    </script>
+</body>
+</html>
