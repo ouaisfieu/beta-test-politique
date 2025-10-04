@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boussole de valeurs</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    #container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: white;
+      min-height: 100vh;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .hidden {
+      display: none;
+    }
+    .question-text {
+      font-size: 1.1em;
+      margin-bottom: 20px;
+    }
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      font-size: 1em;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      background: #f7f7f7;
+      transition: background 0.2s;
+    }
+    .answers button:hover {
+      background: #e0e0e0;
+    }
+    #progress {
+      margin-bottom: 10px;
+    }
+    #canvas-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+    canvas {
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1>Boussole de valeurs</h1>
+    <p id="intro">Ce test vous permet d'identifier les valeurs qui vous motivent le plus selon la théorie de Schwartz. Cliquez sur « Commencer le test » pour commencer.</p>
+    <button id="start-btn">Commencer le test</button>
+
+    <div id="quiz" class="hidden">
+      <p id="progress"></p>
+      <div id="question" class="question-text"></div>
+      <div class="answers" id="answers"></div>
+    </div>
+
+    <div id="results" class="hidden">
+      <h2>Résultats</h2>
+      <canvas id="compass" width="300" height="300"></canvas>
+      <div id="results-text" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <script>
+    // Liste des questions et leur valeur associée selon la théorie de Schwartz
+    const questions = [
+      { text: "Penser à de nouvelles idées et être créatif est important pour lui/elle. Il/elle aime faire les choses à sa façon.", value: "selfDirection" },
+      { text: "Il/elle pense qu’il est important d’être riche et d’avoir beaucoup d’argent et de choses coûteuses.", value: "power" },
+      { text: "Il/elle pense qu’il est important que chaque personne dans le monde soit traitée de manière égale et ait les mêmes opportunités.", value: "universalism" },
+      { text: "Il/elle pense qu’il est important de montrer ses capacités et veut que les gens admirent ce qu’il/elle fait.", value: "achievement" },
+      { text: "Il/elle pense qu’il est important de vivre dans un environnement sûr et évite tout ce qui pourrait mettre sa sécurité en danger.", value: "security" },
+      { text: "Il/elle aime les surprises et cherche toujours de nouvelles choses à faire. Il/elle pense qu’il est important de faire beaucoup de choses différentes dans la vie.", value: "stimulation" },
+      { text: "Il/elle pense que les gens devraient toujours faire ce qu’on leur dit et suivre les règles, même lorsque personne ne regarde.", value: "conformity" },
+      { text: "Il/elle pense qu’il est important d’écouter des personnes différentes de lui/elle. Même lorsqu’il/elle n’est pas d’accord, il/elle veut les comprendre.", value: "universalism" },
+      { text: "Il/elle pense qu’il est important d’être humble et modeste et essaie de ne pas attirer l’attention sur lui/elle.", value: "tradition" },
+      { text: "Il/elle pense qu’il est important de passer du bon temps et aime se faire plaisir.", value: "hedonism" },
+      { text: "Il/elle pense qu’il est important de prendre ses propres décisions et de ne pas dépendre des autres.", value: "selfDirection" },
+      { text: "Il/elle pense qu’il est très important d’aider les personnes autour de lui/elle et veut prendre soin de leur bien-être.", value: "benevolence" },
+      { text: "Il/elle pense qu’il est important de réussir et espère que les gens reconnaîtront ses réalisations.", value: "achievement" },
+      { text: "Il/elle pense qu’il est important que le gouvernement assure sa sécurité contre toutes les menaces et veut que l’État soit fort pour défendre ses citoyens.", value: "security" },
+      { text: "Il/elle recherche des aventures et aime prendre des risques. Il/elle veut mener une vie passionnante.", value: "stimulation" },
+      { text: "Il/elle pense qu’il est important d’avoir toujours un comportement correct et veut éviter de faire quoi que ce soit que les gens pourraient considérer comme mal.", value: "conformity" },
+      { text: "Il/elle pense qu’il est important d’obtenir le respect des autres et veut que les gens fassent ce qu’il/elle dit.", value: "power" },
+      { text: "Il/elle pense qu’il est important d’être loyal envers ses amis et veut se dévouer aux personnes qui lui sont proches.", value: "benevolence" },
+      { text: "Il/elle croit fermement que les gens doivent prendre soin de la nature et que protéger l’environnement est important.", value: "universalism" },
+      { text: "Il/elle pense que la tradition est importante et essaie de suivre les coutumes transmises par sa religion ou sa famille.", value: "tradition" },
+      { text: "Il/elle cherche chaque occasion de s’amuser et pense qu’il est important de faire des choses qui lui procurent du plaisir.", value: "hedonism" }
+    ];
+
+    // Structure de mappage des valeurs sur les axes
+    const valuesMapping = {
+      selfDirection: { axes: { openness: 1 }, count: 0, total: 0 },
+      stimulation: { axes: { openness: 1 }, count: 0, total: 0 },
+      hedonism: { axes: { openness: 1, selfEnhancement: 1 }, count: 0, total: 0 },
+      security: { axes: { conservation: 1 }, count: 0, total: 0 },
+      conformity: { axes: { conservation: 1 }, count: 0, total: 0 },
+      tradition: { axes: { conservation: 1 }, count: 0, total: 0 },
+      universalism: { axes: { selfTranscendence: 1 }, count: 0, total: 0 },
+      benevolence: { axes: { selfTranscendence: 1 }, count: 0, total: 0 },
+      achievement: { axes: { selfEnhancement: 1 }, count: 0, total: 0 },
+      power: { axes: { selfEnhancement: 1 }, count: 0, total: 0 }
+    };
+
+    let currentIndex = 0;
+    const answers = [];
+
+    // Récupération des éléments du DOM
+    const startBtn = document.getElementById('start-btn');
+    const intro = document.getElementById('intro');
+    const quizDiv = document.getElementById('quiz');
+    const questionDiv = document.getElementById('question');
+    const answersDiv = document.getElementById('answers');
+    const progressP = document.getElementById('progress');
+    const resultsDiv = document.getElementById('results');
+    const resultsText = document.getElementById('results-text');
+    const compassCanvas = document.getElementById('compass');
+
+    // Démarrer le test
+    startBtn.addEventListener('click', () => {
+      intro.style.display = 'none';
+      startBtn.style.display = 'none';
+      quizDiv.classList.remove('hidden');
+      showQuestion();
+    });
+
+    // Affichage d'une question
+    function showQuestion() {
+      if (currentIndex >= questions.length) {
+        computeResults();
+        return;
+      }
+      const q = questions[currentIndex];
+      questionDiv.textContent = q.text;
+      progressP.textContent = `Question ${currentIndex + 1} / ${questions.length}`;
+      answersDiv.innerHTML = '';
+      // Options de réponse avec une échelle de 0 à 4
+      const options = [
+        { label: 'Pas du tout moi', value: 0 },
+        { label: 'Peu moi', value: 1 },
+        { label: 'Neutre', value: 2 },
+        { label: 'Plutôt moi', value: 3 },
+        { label: 'Tout à fait moi', value: 4 }
+      ];
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.textContent = opt.label;
+        btn.addEventListener('click', () => {
+          answers.push({ value: q.value, score: opt.value });
+          currentIndex++;
+          showQuestion();
+        });
+        answersDiv.appendChild(btn);
+      });
+    }
+
+    // Calcul des résultats et affichage
+    function computeResults() {
+      // Accumuler les totaux par valeur
+      answers.forEach(ans => {
+        const obj = valuesMapping[ans.value];
+        obj.total += ans.score;
+        obj.count += 1;
+      });
+      // Moyenne par valeur
+      const avg = {};
+      for (const [val, obj] of Object.entries(valuesMapping)) {
+        if (obj.count > 0) {
+          avg[val] = obj.total / obj.count;
+        }
+      }
+      // Fonction utilitaire pour la moyenne d'un ensemble de valeurs
+      function getAvg(arr) {
+        const vals = arr.map(v => avg[v] || 0);
+        return vals.reduce((a, b) => a + b, 0) / arr.length;
+      }
+      // Scores des axes
+      const openness = getAvg(['selfDirection', 'stimulation', 'hedonism']);
+      const conservation = getAvg(['security', 'conformity', 'tradition']);
+      const selfEnhancement = getAvg(['power', 'achievement', 'hedonism']);
+      const selfTranscendence = getAvg(['universalism', 'benevolence']);
+      // Différences normalisées [-1, 1]
+      const axisX = (selfTranscendence - selfEnhancement) / 4;
+      const axisY = (openness - conservation) / 4;
+      // Passage à l'affichage des résultats
+      quizDiv.classList.add('hidden');
+      resultsDiv.classList.remove('hidden');
+      drawCompass(axisX, axisY);
+      const summary = [];
+      summary.push(`Auto‑transcendance vs Auto‑affirmation : ${(axisX * 100).toFixed(1)} % (positif = auto‑transcendance)`);
+      summary.push(`Ouverture vs Conservation : ${(axisY * 100).toFixed(1)} % (positif = ouverture au changement)`);
+      resultsText.innerHTML = summary.join('<br>');
+    }
+
+    // Dessin de la boussole
+    function drawCompass(x, y) {
+      const ctx = compassCanvas.getContext('2d');
+      const w = compassCanvas.width;
+      const h = compassCanvas.height;
+      const centerX = w / 2;
+      const centerY = h / 2;
+      ctx.clearRect(0, 0, w, h);
+      // Axes
+      ctx.strokeStyle = '#888';
+      ctx.beginPath();
+      ctx.moveTo(centerX, 0);
+      ctx.lineTo(centerX, h);
+      ctx.moveTo(0, centerY);
+      ctx.lineTo(w, centerY);
+      ctx.stroke();
+      // Cercle
+      ctx.beginPath();
+      const radius = Math.min(w, h) / 2 - 10;
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.stroke();
+      // Point
+      const px = centerX + radius * x;
+      const py = centerY - radius * y;
+      ctx.fillStyle = '#e74c3c';
+      ctx.beginPath();
+      ctx.arc(px, py, 6, 0, Math.PI * 2);
+      ctx.fill();
+      // Étiquettes
+      ctx.fillStyle = '#333';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      // Horizontales
+      ctx.fillText('Auto‑affirmation', w - 50, centerY + 15);
+      ctx.fillText('Auto‑transcendance', 60, centerY + 15);
+      // Verticales
+      ctx.fillText('Ouverture', centerX, 12);
+      ctx.fillText('Conservation', centerX, h - 5);
+    }
+  </script>
+</body>
+</html>
