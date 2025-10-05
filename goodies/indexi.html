@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Journée internationale des connard·e·s — Auto-audit & kit d’action</title>
+  <meta name="description" content="Application sérieuse d’auto-diagnostic comportemental, engagements concrets, ressources et signalements, à l’occasion de la Journée internationale des connard·e·s." />
+  <style>
+    :root{
+      --bg:#0b0c10; --fg:#eaeef2; --muted:#9aa4b2; --card:#13151b; --accent:#7c3aed;
+      --ok:#16a34a; --warn:#f59e0b; --bad:#ef4444; --line:#20232b;
+      --radius:18px; --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    header{padding:28px 18px 8px;text-align:center}
+    h1{margin:.2rem 0;font-size:clamp(1.6rem,3.8vw,2.4rem)}
+    h2{margin:1.4rem 0 .6rem;font-size:clamp(1.1rem,3vw,1.35rem)}
+    .wrap{max-width:980px;margin:0 auto;padding:18px}
+    .grid{display:grid;gap:18px}
+    @media (min-width:900px){ .grid{grid-template-columns:1.1fr 1fr} }
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+    .badge{display:inline-block;border:1px solid var(--line);padding:.25rem .6rem;border-radius:999px;font-size:.8rem;color:var(--muted)}
+    .kpi{display:flex;gap:10px;align-items:center}
+    .kpi .bar{flex:1;height:10px;background:#161821;border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+    .kpi .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--ok),var(--warn),var(--bad));width:0%}
+    .row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin:.4rem 0}
+    .row label{display:block;font-weight:600}
+    .row .scale{display:flex;gap:6px}
+    .scale input{display:none}
+    .scale label{border:1px solid var(--line);padding:.3rem .55rem;border-radius:10px;cursor:pointer;color:var(--muted)}
+    .scale input:checked + label{border-color:var(--accent);color:var(--fg);outline:2px solid color-mix(in oklab, var(--accent) 30%, transparent)}
+    .hint{color:var(--muted);font-size:.92rem}
+    button{background:var(--accent);border:0;color:white;border-radius:12px;padding:.7rem 1rem;font-weight:700;cursor:pointer;box-shadow:var(--shadow)}
+    button.secondary{background:transparent;color:var(--fg);border:1px solid var(--line)}
+    .flex{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+    .copy{display:inline-flex;align-items:center;gap:8px}
+    .pill{border:1px solid var(--line);padding:.25rem .5rem;border-radius:10px}
+    .foot{color:var(--muted);text-align:center;margin:24px 0}
+    .sr-only{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+    .list{margin:.2rem 0 0 1rem}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="badge">Kit d’auto-audit comportemental</div>
+    <h1>Journée internationale des connard·e·s</h1>
+    <p class="hint">Objectif : repérer des comportements toxiques (chez soi et autour de soi), réduire le tort causé, et agir.</p>
+  </header>
+
+  <main class="wrap grid" aria-live="polite">
+    <section class="card" id="audit">
+      <h2>1) Auto-audit rapide (score en temps réel)</h2>
+      <p class="hint">Coche selon ta fréquence <em>(0 jamais → 4 très souvent)</em>. Ce questionnaire ne juge pas la personne, il mesure des <strong>comportements</strong> contextuels.</p>
+      <div class="kpi" aria-hidden="true">
+        <strong>Score global :</strong>
+        <div class="bar" aria-hidden="true"><span id="kpiFill"></span></div>
+        <code class="mono" id="kpiText">0 / 40</code>
+      </div>
+      <form id="form">
+        <!-- 10 items x (0..4) = 40 -->
+        <div id="items"></div>
+        <div class="flex">
+          <button type="button" id="reset" class="secondary" aria-label="Réinitialiser">Réinitialiser</button>
+          <button type="button" id="save">Enregistrer localement</button>
+        </div>
+        <p class="hint" id="interpretation"></p>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>2) Engagements concrets (choisis 3 minimum)</h2>
+      <ul class="list">
+        <li>Écouter sans interrompre pendant 2 minutes complètes.</li>
+        <li>Remplacer les sarcasmes par une question ouverte.</li>
+        <li>Dire « je me suis trompé·e » quand c’est le cas.</li>
+        <li>Refuser (poliment) les blagues humiliantes.</li>
+        <li>Demander un feedback sincère à 2 personnes.</li>
+        <li>Mettre par écrit une règle perso « pas d’attaque ad hominem ».</li>
+      </ul>
+      <div class="flex" style="margin-top:.6rem">
+        <button id="pledge">Je m’engage</button>
+        <span class="hint" id="pledgeMsg" aria-live="polite"></span>
+      </div>
+
+      <h2 style="margin-top:1.2rem">3) Signalements & traces</h2>
+      <p class="hint">Décris un fait (qui, quoi, où, quand). <em>Reste factuel</em>. Exporte en JSON pour ton dossier perso — rien n’est envoyé nulle part.</p>
+      <textarea id="report" rows="6" class="mono" style="width:100%;background:#0e1118;color:#e5e7eb;border:1px solid var(--line);border-radius:12px;padding:10px" placeholder="Ex. 2025-10-05, réunion asso, M. coupe la parole 7×, hausse le ton, refuse tour de table…"></textarea>
+      <div class="flex" style="margin-top:.6rem">
+        <button id="export">Exporter en JSON</button>
+        <a id="download" class="pill" download="signalement.json" style="display:none">Télécharger</a>
+      </div>
+
+      <h2 style="margin-top:1.2rem">4) Ressources</h2>
+      <ul class="list">
+        <li>Guides « communication non-violente » (CNV), médiation, prévention des conflits.</li>
+        <li>Chartes de modération, codes de conduite (associations, communautés).</li>
+        <li>Numéros d’écoute / soutien (selon pays), référent·e·s RH, déontologie.</li>
+      </ul>
+
+      <h2 style="margin-top:1.2rem">Point médian · (outil pratique)</h2>
+      <p class="copy">
+        <strong class="pill mono" id="middot">·</strong>
+        <button id="copy">Copier</button>
+        <span class="hint">Astuce : vois ci-dessous « Comment taper le point médian sans pavé numérique ».</span>
+      </p>
+    </section>
+  </main>
+
+  <footer class="wrap foot">
+    <p>Ce kit met l’accent sur des comportements observables et l’auto-amélioration. Pas de shaming : on agit.</p>
+    <p class="hint">Licence CC0. Local-first (aucune donnée envoyée). Version 1.0 — 2025-10-05.</p>
+  </footer>
+
+  <script>
+    const QUESTIONS = [
+      ["Je coupe régulièrement la parole."],
+      ["Je fais des blagues aux dépens de quelqu’un."],
+      ["Je refuse de reconnaître un tort évident."],
+      ["J’utilise le sarcasme pour dominer la discussion."],
+      ["Je hausse le ton pour imposer mon point de vue."],
+      ["Je minimise l’impact d’un comportement toxique."],
+      ["Je pratique l’attaque personnelle (ad hominem)."],
+      ["Je rejette les règles/charte quand elles me gênent."],
+      ["Je ridiculise les émotions ou besoins d’autrui."],
+      ["Je refuse systématiquement le feedback."]
+    ];
+
+    const itemsEl = document.getElementById("items");
+    const kpiFill = document.getElementById("kpiFill");
+    const kpiText = document.getElementById("kpiText");
+    const interp = document.getElementById("interpretation");
+
+    function renderQuestions(){
+      itemsEl.innerHTML = "";
+      QUESTIONS.forEach((q, idx) => {
+        const row = document.createElement("div");
+        row.className = "row";
+        row.innerHTML = `
+          <label for="q${idx}">${q[0]}</label>
+          <div class="scale" role="radiogroup" aria-label="${q[0]}">
+            ${[0,1,2,3,4].map(v => `
+              <input type="radio" name="q${idx}" id="q${idx}-${v}" value="${v}" ${v===0?"checked":""} />
+              <label for="q${idx}-${v}" title="${v}">${v}</label>
+            `).join("")}
+          </div>`;
+        itemsEl.appendChild(row);
+      });
+    }
+
+    function score(){
+      const values = [...document.querySelectorAll('input[type=radio]:checked')].map(r => +r.value);
+      const s = values.reduce((a,b)=>a+b,0);
+      const pct = (s/40)*100;
+      kpiFill.style.width = pct.toFixed(0)+"%";
+      kpiText.textContent = `${s} / 40`;
+      if (s <= 8)      interp.textContent = "Zone verte : bonne hygiène relationnelle. Garde ces habitudes et reste à l’écoute.";
+      else if (s <=16) interp.textContent = "Zone ambre : points à surveiller. Choisis 3 engagements concrets ci-dessus.";
+      else if (s <=28) interp.textContent = "Zone orange : comportements problématiques récurrents. Cherche du feedback et pose des garde-fous.";
+      else             interp.textContent = "Zone rouge : forte probabilité de nuisance. Mets en place un plan d’amélioration et accepte l’aide.";
+      return s;
+    }
+
+    document.addEventListener("change", e => {
+      if (e.target.matches("input[type=radio]")) score();
+    });
+
+    document.getElementByI
